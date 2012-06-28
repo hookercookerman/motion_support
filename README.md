@@ -7,6 +7,9 @@ Remember there is no require in motion land;
 
 There is a dependency on bubblewrap at present as this is using their loader.
 
+Code credit will goes to whomever did the original active support code;
+this is just me moving it so it plays nice in RubyMotion; 
+
 ## Installation
 
 ```ruby
