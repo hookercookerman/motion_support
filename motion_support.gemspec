@@ -4,8 +4,8 @@ require File.expand_path('../lib/motion_support/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["hookercookerman"]
   gem.email         = ["hookercookerman@gmail.com"]
-  gem.description   = %q{A toolkit of support libraries and Ruby Motion Core extensions}
-  gem.summary       = %q{A toolkit of support libraries and Ruby Motion Core extensions}
+  gem.description   = %q{A toolkit of support libraries and RubyMotion Core extensions}
+  gem.summary       = %q{A toolkit of support libraries and RubyMotion Core extensions}
   gem.homepage      = "http://www.thehitchhikerprinciple"
 
   gem.files         = `git ls-files`.split($\)
