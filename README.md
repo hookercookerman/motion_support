@@ -15,6 +15,8 @@ gem install motion_support
 
 ## Setup
 
+In your Rakefile
+
 ```ruby
 require 'motion_support'
 ```
