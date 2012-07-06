@@ -1,4 +1,5 @@
 describe "Inflector" do
+
   it "should pluarlize 'pluarls'" do
     MotionSupport::Inflector.pluralize("plurals").should.equal("plurals")
     MotionSupport::Inflector.pluralize("Plurals").should.equal("Plurals")
@@ -270,265 +271,43 @@ describe "Inflector" do
     end
 
      InflectorTestCases::ClassNameToForeignKeyWithoutUnderscore.each do |klass, foreign_key|
-       it {MotionSupport::Inflector.foreign_key(klass, false).should.equal(foreign_key)}
+       it "should give foreign_key for #{klass} as #{foreign_key}" do
+         MotionSupport::Inflector.foreign_key(klass, false).should.equal(foreign_key)
+       end
+    end
+  end
+
+  describe "tableize" do
+    InflectorTestCases::ClassNameToTableName.each do |class_name, table_name|
+      it "should tableize #{class_name} to #{table_name}" do
+        MotionSupport::Inflector.tableize(class_name).should.equal(table_name)
+      end
+    end
+  end
+
+  describe "classify" do
+    InflectorTestCases::ClassNameToTableName.each do |class_name, table_name|
+      it "should classify #{table_name} to equal #{class_name}" do
+        MotionSupport::Inflector.classify(table_name).should.equal(class_name)
+      end
+
+      it "should classify table_prefix.#{table_name} to equal #{class_name}" do
+        MotionSupport::Inflector.classify("table_prefix." + table_name).should.equal(class_name)
+      end
+    end
+  end
+
+  describe "classify with symbol" do
+    it "should not raise nothing with :foo_bars" do
+      lambda{MotionSupport::Inflector.classify(:foo_bars)}.should.not.raise(Exception)
     end
 
+    it "should give 'FooBar' given 'foo_bars'" do
+      MotionSupport::Inflector.classify(:foo_bars).should.equal("FooBar")
+    end
   end
+
+  # @todo finish rest of specs arhhhh!
+
 end
-
-
-
-     #ClassNameToForeignKeyWithoutUnderscore.each do |klass, foreign_key|
-      #assert_equal(foreign_key, ActiveSupport::Inflector.foreign_key(klass, false))
-    #end
-  #end
-
-  #def test_tableize
-    #ClassNameToTableName.each do |class_name, table_name|
-      #assert_equal(table_name, ActiveSupport::Inflector.tableize(class_name))
-    #end
-  #end
-
-  #def test_parameterize
-    #StringToParameterized.each do |some_string, parameterized_string|
-      #assert_equal(parameterized_string, ActiveSupport::Inflector.parameterize(some_string))
-    #end
-  #end
-
-  #def test_parameterize_and_normalize
-    #StringToParameterizedAndNormalized.each do |some_string, parameterized_string|
-      #assert_equal(parameterized_string, ActiveSupport::Inflector.parameterize(some_string))
-    #end
-  #end
-
-  #def test_parameterize_with_custom_separator
-    #StringToParameterizeWithUnderscore.each do |some_string, parameterized_string|
-      #assert_equal(parameterized_string, ActiveSupport::Inflector.parameterize(some_string, '_'))
-    #end
-  #end
-
-  #def test_parameterize_with_multi_character_separator
-    #StringToParameterized.each do |some_string, parameterized_string|
-      #assert_equal(parameterized_string.gsub('-', '__sep__'), ActiveSupport::Inflector.parameterize(some_string, '__sep__'))
-    #end
-  #end
-
-  #def test_classify
-    #ClassNameToTableName.each do |class_name, table_name|
-      #assert_equal(class_name, ActiveSupport::Inflector.classify(table_name))
-      #assert_equal(class_name, ActiveSupport::Inflector.classify("table_prefix." + table_name))
-    #end
-  #end
-
-  #def test_classify_with_symbol
-    #assert_nothing_raised do
-      #assert_equal 'FooBar', ActiveSupport::Inflector.classify(:foo_bars)
-    #end
-  #end
-
-  #def test_classify_with_leading_schema_name
-    #assert_equal 'FooBar', ActiveSupport::Inflector.classify('schema.foo_bar')
-  #end
-
-  #def test_humanize
-    #UnderscoreToHuman.each do |underscore, human|
-      #assert_equal(human, ActiveSupport::Inflector.humanize(underscore))
-    #end
-  #end
-
-  #def test_humanize_by_rule
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #inflect.human(/_cnt$/i, '\1_count')
-      #inflect.human(/^prefx_/i, '\1')
-    #end
-    #assert_equal("Jargon count", ActiveSupport::Inflector.humanize("jargon_cnt"))
-    #assert_equal("Request", ActiveSupport::Inflector.humanize("prefx_request"))
-  #end
-
-  #def test_humanize_by_string
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #inflect.human("col_rpted_bugs", "Reported bugs")
-    #end
-    #assert_equal("Reported bugs", ActiveSupport::Inflector.humanize("col_rpted_bugs"))
-    #assert_equal("Col rpted bugs", ActiveSupport::Inflector.humanize("COL_rpted_bugs"))
-  #end
-
-  #def test_constantize
-    #run_constantize_tests_on do |string|
-      #ActiveSupport::Inflector.constantize(string)
-    #end
-  #end
-
-  #def test_safe_constantize
-    #run_safe_constantize_tests_on do |string|
-      #ActiveSupport::Inflector.safe_constantize(string)
-    #end
-  #end
-
-  #def test_ordinal
-    #OrdinalNumbers.each do |number, ordinalized|
-      #assert_equal(ordinalized, number + ActiveSupport::Inflector.ordinal(number))
-    #end
-  #end
-
-  #def test_ordinalize
-    #OrdinalNumbers.each do |number, ordinalized|
-      #assert_equal(ordinalized, ActiveSupport::Inflector.ordinalize(number))
-    #end
-  #end
-
-  #def test_dasherize
-    #UnderscoresToDashes.each do |underscored, dasherized|
-      #assert_equal(dasherized, ActiveSupport::Inflector.dasherize(underscored))
-    #end
-  #end
-
-  #def test_underscore_as_reverse_of_dasherize
-    #UnderscoresToDashes.each do |underscored, dasherized|
-      #assert_equal(underscored, ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.dasherize(underscored)))
-    #end
-  #end
-
-  #def test_underscore_to_lower_camel
-    #UnderscoreToLowerCamel.each do |underscored, lower_camel|
-      #assert_equal(lower_camel, ActiveSupport::Inflector.camelize(underscored, false))
-    #end
-  #end
-
-  #def test_symbol_to_lower_camel
-    #SymbolToLowerCamel.each do |symbol, lower_camel|
-      #assert_equal(lower_camel, ActiveSupport::Inflector.camelize(symbol, false))
-    #end
-  #end
-
-  #%w{plurals singulars uncountables humans}.each do |inflection_type|
-    #class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      #def test_clear_#{inflection_type}
-        #with_dup do
-          #ActiveSupport::Inflector.inflections.clear :#{inflection_type}
-          #assert ActiveSupport::Inflector.inflections.#{inflection_type}.empty?, \"#{inflection_type} inflections should be empty after clear :#{inflection_type}\"
-        #end
-      #end
-    #RUBY
-  #end
-
-  #def test_clear_all
-    #with_dup do
-      #ActiveSupport::Inflector.inflections do |inflect|
-        ## ensure any data is present
-        #inflect.plural(/(quiz)$/i, '\1zes')
-        #inflect.singular(/(database)s$/i, '\1')
-        #inflect.uncountable('series')
-        #inflect.human("col_rpted_bugs", "Reported bugs")
-
-        #inflect.clear :all
-
-        #assert inflect.plurals.empty?
-        #assert inflect.singulars.empty?
-        #assert inflect.uncountables.empty?
-        #assert inflect.humans.empty?
-      #end
-    #end
-  #end
-
-  #def test_clear_with_default
-    #with_dup do
-      #ActiveSupport::Inflector.inflections do |inflect|
-        ## ensure any data is present
-        #inflect.plural(/(quiz)$/i, '\1zes')
-        #inflect.singular(/(database)s$/i, '\1')
-        #inflect.uncountable('series')
-        #inflect.human("col_rpted_bugs", "Reported bugs")
-
-        #inflect.clear
-
-        #assert inflect.plurals.empty?
-        #assert inflect.singulars.empty?
-        #assert inflect.uncountables.empty?
-        #assert inflect.humans.empty?
-      #end
-    #end
-  #end
-
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_irregularity_between_#{singular}_and_#{plural}") do
-        #inflect.irregular(singular, plural)
-        #assert_equal singular, ActiveSupport::Inflector.singularize(plural)
-        #assert_equal plural, ActiveSupport::Inflector.pluralize(singular)
-      #end
-    #end
-  #end
-
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_pluralize_of_irregularity_#{plural}_should_be_the_same") do
-        #inflect.irregular(singular, plural)
-        #assert_equal plural, ActiveSupport::Inflector.pluralize(plural)
-      #end
-    #end
-  #end
-
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_singularize_of_irregularity_#{singular}_should_be_the_same") do
-        #inflect.irregular(singular, plural)
-        #assert_equal singular, ActiveSupport::Inflector.singularize(singular)
-      #end
-    #end
-  #end
-
-  #[ :all, [] ].each do |scope|
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_clear_inflections_with_#{scope.kind_of?(Array) ? "no_arguments" : scope}") do
-        ## save all the inflections
-        #singulars, plurals, uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
-
-        ## clear all the inflections
-        #inflect.clear(*scope)
-
-        #assert_equal [], inflect.singulars
-        #assert_equal [], inflect.plurals
-        #assert_equal [], inflect.uncountables
-
-        ## restore all the inflections
-        #singulars.reverse.each { |singular| inflect.singular(*singular) }
-        #plurals.reverse.each   { |plural|   inflect.plural(*plural) }
-        #inflect.uncountable(uncountables)
-
-        #assert_equal singulars, inflect.singulars
-        #assert_equal plurals, inflect.plurals
-        #assert_equal uncountables, inflect.uncountables
-      #end
-    #end
-  #end
-
-  #%w(plurals singulars uncountables humans acronyms).each do |scope|
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_clear_inflections_with_#{scope}") do
-        #with_dup do
-          ## clear the inflections
-          #inflect.clear(scope)
-          #assert_equal [], inflect.send(scope)
-        #end
-      #end
-    #end
-  #end
-
-  ## Dups the singleton and yields, restoring the original inflections later.
-  ## Use this in tests what modify the state of the singleton.
-  ##
-  ## This helper is implemented by setting @__instance__ because in some tests
-  ## there are module functions that access ActiveSupport::Inflector.inflections,
-  ## so we need to replace the singleton itself.
-  #def with_dup
-    #original = ActiveSupport::Inflector.inflections
-    #ActiveSupport::Inflector::Inflections.instance_variable_set(:@__instance__, original.dup)
-  #ensure
-    #ActiveSupport::Inflector::Inflections.instance_variable_set(:@__instance__, original)
-  #end
-#end
 
