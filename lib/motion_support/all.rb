@@ -1,6 +1,11 @@
 require 'bubble-wrap/loader'
 
-require File.expand_path('../concern', __FILE__)
+# Base
+require "motion_support/concern"
 
-# Core Ext Array
-require File.expand_path('../core_ext/array/extract_options', __FILE__)
+# Core Exts
+require "motion_support/core_ext"
+
+# Inflector
+require "motion_support/inflector"
+
