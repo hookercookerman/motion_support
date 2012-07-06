@@ -268,18 +268,17 @@ describe "Inflector" do
         MotionSupport::Inflector.foreign_key(klass).should.equal(foreign_key)
       end
     end
-  end
 
+     InflectorTestCases::ClassNameToForeignKeyWithoutUnderscore.each do |klass, foreign_key|
+       it {MotionSupport::Inflector.foreign_key(klass, false).should.equal(foreign_key)}
+    end
+
+  end
 end
 
 
 
-  #def test_foreign_key
-    #ClassNameToForeignKeyWithUnderscore.each do |klass, foreign_key|
-      #assert_equal(foreign_key, ActiveSupport::Inflector.foreign_key(klass))
-    #end
-
-    #ClassNameToForeignKeyWithoutUnderscore.each do |klass, foreign_key|
+     #ClassNameToForeignKeyWithoutUnderscore.each do |klass, foreign_key|
       #assert_equal(foreign_key, ActiveSupport::Inflector.foreign_key(klass, false))
     #end
   #end
