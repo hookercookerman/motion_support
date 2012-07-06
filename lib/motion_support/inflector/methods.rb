@@ -1,3 +1,5 @@
 require 'bubble-wrap/loader'
-BubbleWrap.require('motion/inflector/methods.rb').depends_on('motion/inflector/inflections.rb')
+BubbleWrap.require('motion/inflector/*.rb') do
+  file('motion/inflector/methods.rb').depends_on('motion/inflector/inflections.rb')
+end
 

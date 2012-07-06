@@ -7,7 +7,7 @@ describe "Array" do
   end
 
   describe "#prepend" do
-    it "shoudl prepend elements on the array" do
+    it "should prepend elements on the array" do
       [1].prepend(2).should.equal([2,1])
     end
   end
