@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = MotionSupport::VERSION
 
   gem.add_dependency 'bubble-wrap'
+  gem.add_development_dependency 'motion-redgreen'
 end

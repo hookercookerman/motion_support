@@ -4,10 +4,10 @@
 ## This helper is implemented by setting @__instance__ because in some tests
 ## there are module functions that access MotionSupport::Inflector.inflections,
 ## so we need to replace the singleton itself.
-def with_dup
+def with_dup(&block)
   original = MotionSupport::Inflector.inflections
   MotionSupport::Inflector::Inflections.instance_variable_set(:@__instance__, original.dup)
-ensure
+  block.call
   MotionSupport::Inflector::Inflections.instance_variable_set(:@__instance__, original)
 end
 
