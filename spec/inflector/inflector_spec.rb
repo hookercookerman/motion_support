@@ -428,9 +428,7 @@ describe "Inflector" do
   %w{plurals singulars uncountables humans}.each do |inflection_type|
     describe "clearing #{inflection_type} inflection type" do
       before do
-        with_dup do
-          MotionSupport::Inflector.inflections.clear(:"#{inflection_type}")
-        end
+        MotionSupport::Inflector.inflections.clear(inflection_type)
       end
       it "should have empty #{inflection_type}" do
         MotionSupport::Inflector.inflections.send(inflection_type).empty?.should.equal(true)
@@ -438,111 +436,100 @@ describe "Inflector" do
     end
   end
 
-
-  #%w{plurals singulars uncountables humans}.each do |inflection_type|
-    #class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      #def test_clear_#{inflection_type}
-        #with_dup do
-          #ActiveSupport::Inflector.inflections.clear :#{inflection_type}
-          #assert ActiveSupport::Inflector.inflections.#{inflection_type}.empty?, \"#{inflection_type} inflections should be empty after clear :#{inflection_type}\"
-        #end
-      #end
-    #RUBY
-  #end
-
-  #def test_clear_all
-    #with_dup do
-      #ActiveSupport::Inflector.inflections do |inflect|
+  describe "clearing all" do
+    before do
+      MotionSupport::Inflector.inflections do |inflect|
         ## ensure any data is present
-        #inflect.plural(/(quiz)$/i, '\1zes')
-        #inflect.singular(/(database)s$/i, '\1')
-        #inflect.uncountable('series')
-        #inflect.human("col_rpted_bugs", "Reported bugs")
+        inflect.plural(/(quiz)$/i, '\1zes')
+        inflect.singular(/(database)s$/i, '\1')
+        inflect.uncountable('series')
+        inflect.human("col_rpted_bugs", "Reported bugs")
 
-        #inflect.clear :all
+        inflect.clear :all
+      end
+    end
 
-        #assert inflect.plurals.empty?
-        #assert inflect.singulars.empty?
-        #assert inflect.uncountables.empty?
-        #assert inflect.humans.empty?
-      #end
-    #end
-  #end
+    it "should have empty pluarals" do
+      MotionSupport::Inflector.inflections.plurals.empty?.should.equal(true)
+    end
+    it "should have empty singulars" do
+      MotionSupport::Inflector.inflections.singulars.empty?.should.equal(true)
+    end
+    it "should have empty uncountables" do
+      MotionSupport::Inflector.inflections.uncountables.empty?.should.equal(true)
+    end
+    it "should have empty humans" do
+      MotionSupport::Inflector.inflections.humans.empty?.should.equal(true)
+    end
+  end
 
-  #def test_clear_with_default
-    #with_dup do
-      #ActiveSupport::Inflector.inflections do |inflect|
-        ## ensure any data is present
-        #inflect.plural(/(quiz)$/i, '\1zes')
-        #inflect.singular(/(database)s$/i, '\1')
-        #inflect.uncountable('series')
-        #inflect.human("col_rpted_bugs", "Reported bugs")
+  describe "Irregularities" do
+    InflectorTestCases::Irregularities.each do |irregularity|
+      singular, plural = *irregularity
 
-        #inflect.clear
+      MotionSupport::Inflector.inflections do |inflect|
+        it "should singularize #{plural} to equal #{singular}" do
+          inflect.irregular(singular, plural)
+          MotionSupport::Inflector.singularize(plural).should.equal(singular)
+        end
 
-        #assert inflect.plurals.empty?
-        #assert inflect.singulars.empty?
-        #assert inflect.uncountables.empty?
-        #assert inflect.humans.empty?
-      #end
-    #end
-  #end
+        it "should pluralize #{singular} to equal #{plural}" do
+          inflect.irregular(singular, plural)
+          MotionSupport::Inflector.pluralize(singular).should.equal(plural)
+        end
+      end
+    end
 
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_irregularity_between_#{singular}_and_#{plural}") do
-        #inflect.irregular(singular, plural)
-        #assert_equal singular, ActiveSupport::Inflector.singularize(plural)
-        #assert_equal plural, ActiveSupport::Inflector.pluralize(singular)
-      #end
-    #end
-  #end
+    InflectorTestCases::Irregularities.each do |irregularity|
+      singular, plural = *irregularity
 
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_pluralize_of_irregularity_#{plural}_should_be_the_same") do
-        #inflect.irregular(singular, plural)
-        #assert_equal plural, ActiveSupport::Inflector.pluralize(plural)
-      #end
-    #end
-  #end
+      MotionSupport::Inflector.inflections do |inflect|
+        it "should singularize #{plural} to equal #{singular}" do
+          inflect.irregular(singular, plural)
+          MotionSupport::Inflector.singularize(plural).should.equal(singular)
+        end
 
-  #Irregularities.each do |irregularity|
-    #singular, plural = *irregularity
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_singularize_of_irregularity_#{singular}_should_be_the_same") do
-        #inflect.irregular(singular, plural)
-        #assert_equal singular, ActiveSupport::Inflector.singularize(singular)
-      #end
-    #end
-  #end
-
-  #[ :all, [] ].each do |scope|
-    #ActiveSupport::Inflector.inflections do |inflect|
-      #define_method("test_clear_inflections_with_#{scope.kind_of?(Array) ? "no_arguments" : scope}") do
-        ## save all the inflections
-        #singulars, plurals, uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
-
-        ## clear all the inflections
-        #inflect.clear(*scope)
-
-        #assert_equal [], inflect.singulars
-        #assert_equal [], inflect.plurals
-        #assert_equal [], inflect.uncountables
-
-        ## restore all the inflections
-        #singulars.reverse.each { |singular| inflect.singular(*singular) }
-        #plurals.reverse.each   { |plural|   inflect.plural(*plural) }
-        #inflect.uncountable(uncountables)
-
-        #assert_equal singulars, inflect.singulars
-        #assert_eq
-  #end
+        it "should pluralize #{singular} to equal #{plural}" do
+          inflect.irregular(singular, plural)
+          MotionSupport::Inflector.pluralize(singular).should.equal(plural)
+        end
+      end
+    end
+  end
 
 
-  # @todo finish rest of specs arhhhh!
+  [ :all, [] ].each do |scope|
+    MotionSupport::Inflector.inflections do |inflect|
+      describe "clearing inflections with #{scope.kind_of?(Array) ? "no_arguments" : scope}" do
+        before do
+          @singulars, @plurals, @uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
+          inflect.clear(*scope)
+        end
 
+        it "should have empty singular" do
+          inflect.singulars.should.equal([])
+        end
+
+        it "should have empty plurals" do
+         inflect.plurals.should.equal([])
+        end
+
+        it "should have empty uncountables" do
+          inflect.uncountables.should.equal([])
+        end
+
+        describe "restore all the inflections" do
+          before do
+            @singulars.reverse.each { |singular| inflect.singular(*singular) }
+            @plurals.reverse.each   { |plural|   inflect.plural(*plural) }
+            inflect.uncountable(@uncountables)
+          end
+
+          it "should restore singulars" do
+            inflect.singulars.should.equal(@singulars)
+          end
+        end
+      end
+    end
+  end
 end
-

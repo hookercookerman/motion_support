@@ -22,6 +22,9 @@ In your Rakefile
 
 ```ruby
 require 'motion_support'
+
+Note this will not include any motion support you must say you want all
+if thats what you want
 ```
 
 The idea is that you can choose from a multiple modules so that you can easily choose which parts
