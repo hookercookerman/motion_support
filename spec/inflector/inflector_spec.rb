@@ -425,11 +425,19 @@ describe "Inflector" do
     end
   end
 
-  #def test_symbol_to_lower_camel
-    #SymbolToLowerCamel.each do |symbol, lower_camel|
-      #assert_equal(lower_camel, ActiveSupport::Inflector.camelize(symbol, false))
-    #end
-  #end
+  %w{plurals singulars uncountables humans}.each do |inflection_type|
+    describe "clearing #{inflection_type} inflection type" do
+      before do
+        with_dup do
+          MotionSupport::Inflector.inflections.clear(:"#{inflection_type}")
+        end
+      end
+      it "should have empty #{inflection_type}" do
+        MotionSupport::Inflector.inflections.send(inflection_type).empty?.should.equal(true)
+      end
+    end
+  end
+
 
   #%w{plurals singulars uncountables humans}.each do |inflection_type|
     #class_eval <<-RUBY, __FILE__, __LINE__ + 1
