@@ -6,6 +6,7 @@ Bundler.setup
 Bundler.require
 require 'bubble-wrap/test'
 
+require "motion_support"
 require "motion_support/all"
 
 # Bug RubyMotion 1.15
