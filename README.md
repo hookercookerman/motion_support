@@ -34,10 +34,22 @@ are included at compile-time.
 require 'motion_support/all'
 ```
 
-If you wish to only include the `concern`
+If you wish to only include `concern`
 
 ```ruby
 require 'motion_support/concern'
+```
+
+If you wish to only include the `Inflector`
+
+```ruby
+require 'bubble-wrap/inflector'
+```
+
+If you wish to only include `core_extensions`
+
+```ruby
+require 'bubble-wrap/core_ext'
 ```
 
 # Suggestions?
