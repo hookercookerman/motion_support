@@ -31,7 +31,7 @@ class Object
     if a.empty? && block_given?
       yield self
     else
-      public_send(*a, &b)
+      __send__(*a, &b)
     end
   end
 end
